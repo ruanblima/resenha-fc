@@ -1,16 +1,14 @@
 import { render, screen } from '@testing-library/react-native';
 import React from 'react';
 
-import { mockMatchDayItems, mockNewsItems, mockTournaments } from '../../../mocks/home';
+import { mockCompetitions, mockMatchDayItems, mockNewsItems } from '../../../mocks/home';
 import { HomeScreen } from '../HomeScreen';
 
 describe('HomeScreen', () => {
   it('exibe o título da seção de jogos do dia', () => {
     render(
       <HomeScreen
-        tournaments={mockTournaments}
-        selectedTournamentId="wc2026"
-        onSelectTournament={jest.fn()}
+        competitions={mockCompetitions}
         matchDayItems={mockMatchDayItems}
         newsItems={mockNewsItems}
       />
@@ -21,9 +19,7 @@ describe('HomeScreen', () => {
   it('exibe o título da seção de notícias', () => {
     render(
       <HomeScreen
-        tournaments={mockTournaments}
-        selectedTournamentId="wc2026"
-        onSelectTournament={jest.fn()}
+        competitions={mockCompetitions}
         matchDayItems={mockMatchDayItems}
         newsItems={mockNewsItems}
       />
@@ -34,9 +30,7 @@ describe('HomeScreen', () => {
   it('exibe os cards de jogos do dia', () => {
     render(
       <HomeScreen
-        tournaments={mockTournaments}
-        selectedTournamentId="wc2026"
-        onSelectTournament={jest.fn()}
+        competitions={mockCompetitions}
         matchDayItems={mockMatchDayItems}
         newsItems={mockNewsItems}
       />
@@ -48,9 +42,7 @@ describe('HomeScreen', () => {
   it('exibe os cards de notícias', () => {
     render(
       <HomeScreen
-        tournaments={mockTournaments}
-        selectedTournamentId="wc2026"
-        onSelectTournament={jest.fn()}
+        competitions={mockCompetitions}
         matchDayItems={mockMatchDayItems}
         newsItems={mockNewsItems}
       />
@@ -58,16 +50,26 @@ describe('HomeScreen', () => {
     expect(screen.getByText('EDITORIAL')).toBeTruthy();
   });
 
-  it('exibe o seletor de torneios', () => {
+  it('exibe o carrossel de competições', () => {
     render(
       <HomeScreen
-        tournaments={mockTournaments}
-        selectedTournamentId="wc2026"
-        onSelectTournament={jest.fn()}
+        competitions={mockCompetitions}
         matchDayItems={mockMatchDayItems}
         newsItems={mockNewsItems}
       />
     );
     expect(screen.getByText('Copa do Mundo 2026')).toBeTruthy();
+    expect(screen.getByText('Champions League')).toBeTruthy();
+  });
+
+  it('exibe a contagem de jogos ao vivo', () => {
+    render(
+      <HomeScreen
+        competitions={mockCompetitions}
+        matchDayItems={mockMatchDayItems}
+        newsItems={mockNewsItems}
+      />
+    );
+    expect(screen.getByText('1 AO VIVO')).toBeTruthy();
   });
 });

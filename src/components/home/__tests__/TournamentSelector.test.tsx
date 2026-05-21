@@ -1,46 +1,39 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
 
-import { mockTournaments } from '../../../mocks/home';
-import { TournamentSelector } from '../TournamentSelector';
+import { mockCompetitions } from '../../../mocks/home';
+import { CompetitionCarousel } from '../CompetitionCarousel';
 
-describe('TournamentSelector', () => {
-  it('exibe todos os torneios', () => {
-    render(
-      <TournamentSelector
-        tournaments={mockTournaments}
-        selectedId="wc2026"
-        onSelect={jest.fn()}
-      />
-    );
+describe('CompetitionCarousel', () => {
+  it('exibe todas as competições', () => {
+    render(<CompetitionCarousel competitions={mockCompetitions} />);
     expect(screen.getByText('Copa do Mundo 2026')).toBeTruthy();
+    expect(screen.getByText('Champions League')).toBeTruthy();
+    expect(screen.getByText('Premier League')).toBeTruthy();
     expect(screen.getByText('Euro 2024')).toBeTruthy();
-    expect(screen.getByText('Copa América')).toBeTruthy();
-    expect(screen.getByText('AFCON 2025')).toBeTruthy();
   });
 
-  it('chama onSelect com o id correto ao pressionar um torneio', () => {
+  it('chama onSelect ao pressionar uma competição', () => {
     const onSelect = jest.fn();
-    render(
-      <TournamentSelector
-        tournaments={mockTournaments}
-        selectedId="wc2026"
-        onSelect={onSelect}
-      />
-    );
-    fireEvent.press(screen.getByText('Euro 2024'));
-    expect(onSelect).toHaveBeenCalledWith('euro2024');
+    render(<CompetitionCarousel competitions={mockCompetitions} onSelect={onSelect} />);
+    fireEvent.press(screen.getByTestId('competition-card-ucl'));
+    expect(onSelect).toHaveBeenCalledWith('ucl');
   });
 
-  it('indica visualmente o torneio selecionado', () => {
-    render(
-      <TournamentSelector
-        tournaments={mockTournaments}
-        selectedId="wc2026"
-        onSelect={jest.fn()}
-      />
-    );
-    const selected = screen.getByTestId('tournament-tab-wc2026');
-    expect(selected.props.accessibilityState?.selected).toBe(true);
+  it('indica visualmente a competição ativa', () => {
+    render(<CompetitionCarousel competitions={mockCompetitions} />);
+    const active = screen.getByTestId('competition-card-wc2026');
+    expect(active.props.accessibilityState?.selected).toBe(true);
+  });
+
+  it('exibe badge AO VIVO na competição com isLive', () => {
+    render(<CompetitionCarousel competitions={mockCompetitions} />);
+    expect(screen.getByText('AO VIVO')).toBeTruthy();
+  });
+
+  it('exibe as categorias das competições', () => {
+    render(<CompetitionCarousel competitions={mockCompetitions} />);
+    expect(screen.getByText('GLOBAL STAGE')).toBeTruthy();
+    expect(screen.getByText('CLUB ELITE')).toBeTruthy();
   });
 });

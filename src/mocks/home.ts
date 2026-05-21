@@ -1,10 +1,10 @@
-import type { MatchDayItem, NewsItem, Tournament } from '../types/home';
+import type { Competition, MatchDayItem, NewsItem } from '../types/home';
 
-export const mockTournaments: Tournament[] = [
-  { id: 'wc2026', name: 'Copa do Mundo 2026', year: 2026 },
-  { id: 'euro2024', name: 'Euro 2024', year: 2024 },
-  { id: 'copa2024', name: 'Copa América', year: 2024 },
-  { id: 'afcon2025', name: 'AFCON 2025', year: 2025 },
+export const mockCompetitions: Competition[] = [
+  { id: 'wc2026', name: 'Copa do Mundo 2026', category: 'Global Stage', icon: 'public', isActive: true },
+  { id: 'ucl', name: 'Champions League', category: 'Club Elite', icon: 'star' },
+  { id: 'pl', name: 'Premier League', category: 'Top Flight', icon: 'sports-soccer', isLive: true },
+  { id: 'euro2024', name: 'Euro 2024', category: 'Europa', icon: 'flag' },
 ];
 
 export const mockMatchDayItems: MatchDayItem[] = [

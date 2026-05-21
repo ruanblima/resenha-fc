@@ -1,9 +1,12 @@
 import type { Team } from './match';
 
-export interface Tournament {
+export interface Competition {
   id: string;
   name: string;
-  year: number;
+  category: string;
+  icon: string;
+  isActive?: boolean;
+  isLive?: boolean;
 }
 
 export interface MatchDayItem {
