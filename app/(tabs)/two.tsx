@@ -1,31 +1,36 @@
-import { StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import { AppHeader } from '../../src/components/AppHeader';
+import { StatsScreen } from '../../src/components/stats/StatsScreen';
+import {
+  mockAssists,
+  mockCards,
+  mockGroupStanding,
+  mockScorers,
+  statValueLabel,
+} from '../../src/mocks/stats';
+import type { StatCategory } from '../../src/types/stats';
 
-export default function TabTwoScreen() {
+const playersByCategory = {
+  scorers: mockScorers,
+  assists: mockAssists,
+  cards: mockCards,
+};
+
+export default function StatsTab() {
+  const [selectedCategory, setSelectedCategory] = useState<StatCategory>('scorers');
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+      <AppHeader />
+      <StatsScreen
+        players={playersByCategory[selectedCategory]}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+        groupStanding={mockGroupStanding}
+        statLabel={statValueLabel[selectedCategory]}
+      />
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
