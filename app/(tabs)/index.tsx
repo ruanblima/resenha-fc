@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -7,9 +8,10 @@ import { mockMatchDayItems, mockNewsItems, mockTournaments } from '../../src/moc
 
 export default function HomeTab() {
   const [selectedTournamentId, setSelectedTournamentId] = useState('wc2026');
+  const router = useRouter();
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={[]}>
       <AppHeader />
       <HomeScreen
         tournaments={mockTournaments}
@@ -17,6 +19,7 @@ export default function HomeTab() {
         onSelectTournament={setSelectedTournamentId}
         matchDayItems={mockMatchDayItems}
         newsItems={mockNewsItems}
+        onPressMatch={(id) => router.push(`/match/${id}` as any)}
       />
     </SafeAreaView>
   );

@@ -15,7 +15,7 @@ export default function LiveTab() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={[]}>
       <AppHeader />
       <LiveGamesScreen matches={mockLiveMatches} onMatchPress={handleMatchPress} />
     </SafeAreaView>

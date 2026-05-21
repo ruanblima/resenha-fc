@@ -22,7 +22,7 @@ export default function StatsTab() {
   const [selectedCategory, setSelectedCategory] = useState<StatCategory>('scorers');
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background" edges={[]}>
       <AppHeader />
       <StatsScreen
         players={playersByCategory[selectedCategory]}
