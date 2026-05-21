@@ -14,9 +14,14 @@ describe('MatchDayCard - jogo ao vivo', () => {
     expect(screen.getByText('ARG')).toBeTruthy();
   });
 
-  it('exibe o placar', () => {
+  it('exibe o placar do time da casa', () => {
     render(<MatchDayCard match={liveMatch} />);
-    expect(screen.getByText('2 - 1')).toBeTruthy();
+    expect(screen.getByText('2')).toBeTruthy();
+  });
+
+  it('exibe o placar do time visitante', () => {
+    render(<MatchDayCard match={liveMatch} />);
+    expect(screen.getByText('1')).toBeTruthy();
   });
 
   it('exibe o minuto do jogo', () => {
@@ -49,7 +54,7 @@ describe('MatchDayCard - jogo futuro', () => {
 
   it('exibe o horário do jogo', () => {
     render(<MatchDayCard match={upcomingMatch} />);
-    expect(screen.getByText('20:00')).toBeTruthy();
+    expect(screen.getByText('20:00 GMT')).toBeTruthy();
   });
 
   it('não exibe badge LIVE para jogo futuro', () => {

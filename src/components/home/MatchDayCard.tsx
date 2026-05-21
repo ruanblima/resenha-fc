@@ -1,8 +1,10 @@
 import React from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Dimensions, Image, Pressable, Text, View } from 'react-native';
 
 import { colors } from '../../theme';
 import type { MatchDayItem } from '../../types/home';
+
+const CARD_WIDTH = Dimensions.get('window').width * 0.85;
 
 interface Props {
   match: MatchDayItem;
@@ -16,53 +18,74 @@ export function MatchDayCard({ match, onPress }: Props) {
     <Pressable
       testID="match-day-card"
       onPress={onPress}
-      className="bg-surface-high rounded-xl p-4 mx-4 mb-3"
+      style={{ width: CARD_WIDTH, height: 180 }}
+      className={`bg-surface-container rounded-xl p-5 flex-col justify-between ${
+        isLive ? 'border-t-2' : 'border border-outline-variant'
+      }`}
+      // NativeWind não suporta border-top dinâmico por cor, usamos style inline para o live
+      {...(isLive ? { style: { width: CARD_WIDTH, height: 180, borderTopWidth: 2, borderTopColor: colors.primary } } : {})}
     >
-      <View className="flex-row items-center justify-between mb-3">
-        <Text className="font-work-sans text-xs font-semibold text-on-surface-variant">
-          {match.stage}
-        </Text>
-        {isLive && (
-          <View className="flex-row items-center gap-x-1">
-            <View className="w-1.5 h-1.5 rounded-full bg-secondary" />
-            <Text className="font-work-sans text-xs font-bold" style={{ color: colors.secondary }}>
+      {/* Top row */}
+      <View className="flex-row justify-between items-center w-full">
+        {isLive ? (
+          <View className="flex-row items-center gap-x-1.5 bg-background px-2 py-1 rounded border border-outline-variant">
+            <View
+              className="w-2 h-2 rounded-full bg-secondary"
+            />
+            <Text className="font-inter-semibold text-xs tracking-widest text-secondary">
               LIVE
             </Text>
-            <Text className="font-work-sans text-xs text-on-surface-variant">
+            <Text className="font-inter-semibold text-xs text-secondary">
               {match.minute}'
             </Text>
           </View>
+        ) : (
+          <View className="bg-background px-2 py-1 rounded">
+            <Text className="font-inter-semibold text-xs tracking-widest text-on-surface-variant">
+              {match.startTime} GMT
+            </Text>
+          </View>
         )}
-        {!isLive && match.startTime && (
-          <Text className="font-work-sans text-xs text-on-surface-variant">{match.startTime}</Text>
-        )}
+        <Text className="font-inter-semibold text-xs tracking-widest text-on-surface-variant uppercase">
+          {match.stage}
+        </Text>
       </View>
 
-      <View className="flex-row items-center justify-between">
-        <TeamInfo
-          flagUrl={match.homeTeam.flagUrl}
-          shortName={match.homeTeam.shortName}
-          align="left"
-        />
+      {/* Teams + Score */}
+      <View className="flex-row justify-between items-center w-full mt-4">
+        <TeamInfo flagUrl={match.homeTeam.flagUrl} shortName={match.homeTeam.shortName} />
 
-        <View className="items-center">
-          {isLive ? (
+        {isLive ? (
+          <View className="flex-row items-center gap-x-3">
             <Text
-              className="font-anybody text-2xl font-bold"
-              style={{ color: colors.primary }}
+              className="font-anybody-extrabold text-5xl"
+              style={{ color: colors.primary, letterSpacing: -0.96 }}
             >
-              {match.homeScore} - {match.awayScore}
+              {match.homeScore}
             </Text>
-          ) : (
-            <Text className="font-anybody text-xl font-bold text-on-surface-variant">VS</Text>
-          )}
-        </View>
+            <Text
+              className="font-anybody-extrabold text-5xl"
+              style={{ color: colors.onSurfaceVariant, opacity: 0.6, letterSpacing: -0.96 }}
+            >
+              -
+            </Text>
+            <Text
+              className="font-anybody-extrabold text-5xl"
+              style={{ color: colors.onSurfaceVariant, opacity: 0.6, letterSpacing: -0.96 }}
+            >
+              {match.awayScore}
+            </Text>
+          </View>
+        ) : (
+          <Text
+            className="font-anybody-bold text-2xl"
+            style={{ color: colors.onSurfaceVariant, opacity: 0.7 }}
+          >
+            VS
+          </Text>
+        )}
 
-        <TeamInfo
-          flagUrl={match.awayTeam.flagUrl}
-          shortName={match.awayTeam.shortName}
-          align="right"
-        />
+        <TeamInfo flagUrl={match.awayTeam.flagUrl} shortName={match.awayTeam.shortName} />
       </View>
     </Pressable>
   );
@@ -71,14 +94,17 @@ export function MatchDayCard({ match, onPress }: Props) {
 interface TeamInfoProps {
   flagUrl: string;
   shortName: string;
-  align: 'left' | 'right';
 }
 
-function TeamInfo({ flagUrl, shortName, align }: TeamInfoProps) {
+function TeamInfo({ flagUrl, shortName }: TeamInfoProps) {
   return (
-    <View className={`items-center gap-y-1 ${align === 'right' ? 'items-end' : 'items-start'}`}>
-      <Image source={{ uri: flagUrl }} className="w-10 h-7 rounded" resizeMode="contain" />
-      <Text className="font-anybody text-sm font-bold text-on-surface">{shortName}</Text>
+    <View className="items-center gap-y-2 w-20">
+      <View className="w-12 h-12 rounded-full overflow-hidden border border-outline-variant bg-background">
+        <Image source={{ uri: flagUrl }} className="w-full h-full" resizeMode="cover" />
+      </View>
+      <Text className="font-inter-semibold text-xs tracking-widest text-on-surface uppercase">
+        {shortName}
+      </Text>
     </View>
   );
 }
