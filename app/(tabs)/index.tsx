@@ -1,22 +1,36 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../src/components/AppHeader';
 import { HomeScreen } from '../../src/components/home/HomeScreen';
+import { SideMenu } from '../../src/components/SideMenu';
 import { mockCompetitions, mockMatchDayItems, mockNewsItems } from '../../src/mocks/home';
 
 export default function HomeTab() {
   const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeCompetitionId, setActiveCompetitionId] = useState('wc2026');
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={[]}>
-      <AppHeader />
+    <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+      <AppHeader onMenuPress={() => setMenuOpen(true)} />
       <HomeScreen
         competitions={mockCompetitions}
         matchDayItems={mockMatchDayItems}
         newsItems={mockNewsItems}
-        onPressMatch={(id) => router.push(`/match/${id}` as any)}
+        onSelectCompetition={(id) => router.push({ pathname: '/competition/[id]', params: { id } })}
+        onPressMatch={(id) => router.push({ pathname: '/match/[id]', params: { id } })}
+      />
+      <SideMenu
+        visible={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        competitions={mockCompetitions}
+        activeCompetitionId={activeCompetitionId}
+        onSelectCompetition={(id) => {
+          setActiveCompetitionId(id);
+          setMenuOpen(false);
+        }}
       />
     </SafeAreaView>
   );

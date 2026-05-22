@@ -1,10 +1,47 @@
-import type { Competition, MatchDayItem, NewsItem } from '../types/home';
+import type { Competition, CountryLeagues, MatchDayItem, NewsItem } from '../types/home';
 
 export const mockCompetitions: Competition[] = [
-  { id: 'wc2026', name: 'Copa do Mundo 2026', category: 'Global Stage', icon: 'public', isActive: true },
-  { id: 'ucl', name: 'Champions League', category: 'Club Elite', icon: 'star' },
-  { id: 'pl', name: 'Premier League', category: 'Top Flight', icon: 'sports-soccer', isLive: true },
-  { id: 'euro2024', name: 'Euro 2024', category: 'Europa', icon: 'flag' },
+  { id: 'wc2026', name: 'Copa do Mundo 2026', category: 'Global Stage', icon: 'public', region: 'Americas', isActive: true },
+  { id: 'ucl', name: 'Champions League', category: 'Club Elite', icon: 'star', region: 'Europe' },
+  { id: 'pl', name: 'Premier League', category: 'Top Flight', icon: 'sports-soccer', region: 'England', isLive: true },
+  { id: 'euro2024', name: 'Euro 2024', category: 'Europa', icon: 'flag', region: 'Europe' },
+];
+
+export const mockCountryLeagues: CountryLeagues[] = [
+  {
+    id: 'brazil',
+    name: 'Brasil',
+    leagues: [
+      { id: 'serie-a', name: 'Série A', icon: 'sports-soccer' },
+      { id: 'serie-b', name: 'Série B', icon: 'sports-soccer' },
+      { id: 'copa-brasil', name: 'Copa do Brasil', icon: 'emoji-events' },
+    ],
+  },
+  {
+    id: 'england',
+    name: 'Inglaterra',
+    leagues: [
+      { id: 'pl', name: 'Premier League', icon: 'verified', isFeatured: true },
+      { id: 'fa-cup', name: 'FA Cup', icon: 'emoji-events' },
+      { id: 'efl-cup', name: 'EFL Cup', icon: 'sports-soccer' },
+    ],
+  },
+  {
+    id: 'spain',
+    name: 'Espanha',
+    leagues: [
+      { id: 'la-liga', name: 'La Liga', icon: 'sports-soccer' },
+      { id: 'copa-del-rey', name: 'Copa del Rey', icon: 'emoji-events' },
+    ],
+  },
+  {
+    id: 'italy',
+    name: 'Itália',
+    leagues: [
+      { id: 'serie-a-it', name: 'Serie A', icon: 'sports-soccer' },
+      { id: 'coppa-italia', name: 'Coppa Italia', icon: 'emoji-events' },
+    ],
+  },
 ];
 
 export const mockMatchDayItems: MatchDayItem[] = [

@@ -1,8 +1,7 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 import { colors } from '../theme';
 
@@ -11,17 +10,20 @@ interface Props {
   showBack?: boolean;
   onMenuPress?: () => void;
   onNotificationPress?: () => void;
+  onSearchPress?: () => void;
 }
 
-export function AppHeader({ title, showBack, onMenuPress, onNotificationPress }: Props) {
+export function AppHeader({
+  title,
+  showBack,
+  onMenuPress,
+  onNotificationPress,
+  onSearchPress,
+}: Props) {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
 
   return (
-    <View
-      className="flex-row items-center justify-between px-4 py-3 bg-background border-b border-outline-variant"
-      style={{ paddingTop: insets.top + 12 }}
-    >
+    <View className="flex-row items-center justify-between px-4 py-3 bg-background border-b border-outline-variant">
       {showBack ? (
         <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
           <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
@@ -32,11 +34,20 @@ export function AppHeader({ title, showBack, onMenuPress, onNotificationPress }:
         </TouchableOpacity>
       )}
 
-      <Text className="text-primary font-anybody-bold text-lg tracking-widest">
+      <Text
+        className="text-primary font-anybody-bold text-lg tracking-widest"
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        style={{ flex: 1, textAlign: 'center', marginHorizontal: 8 }}
+      >
         {title ?? 'COPA DO MUNDO'}
       </Text>
 
-      {showBack ? (
+      {showBack && onSearchPress ? (
+        <TouchableOpacity onPress={onSearchPress} hitSlop={8}>
+          <MaterialIcons name="search" size={24} color={colors.primary} />
+        </TouchableOpacity>
+      ) : showBack ? (
         <View style={{ width: 24 }} />
       ) : (
         <TouchableOpacity onPress={onNotificationPress} hitSlop={8}>

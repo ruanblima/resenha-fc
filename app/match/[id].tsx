@@ -1,6 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../src/components/AppHeader';
 import { MatchDetailScreen } from '../../src/components/match/MatchDetailScreen';
@@ -22,9 +23,9 @@ export default function MatchDetailPage() {
   const title = `${match.homeTeam.shortName} × ${match.awayTeam.shortName}`;
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
       <AppHeader title={title} showBack />
       <MatchDetailScreen match={match} />
-    </View>
+    </SafeAreaView>
   );
 }

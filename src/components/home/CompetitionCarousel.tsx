@@ -101,7 +101,7 @@ function CompetitionCard({ comp, onPress }: { comp: Competition; onPress: () => 
       {/* Icon top-right */}
       <View className="absolute top-3 right-3">
         <MaterialIcons
-          name={comp.icon as any}
+          name={comp.icon}
           size={18}
           color={comp.isActive ? colors.primary : `${colors.onSurfaceVariant}99`}
         />
