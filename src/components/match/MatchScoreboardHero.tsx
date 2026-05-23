@@ -13,6 +13,8 @@ export function MatchScoreboardHero({ match }: Props) {
   const isLive = match.status === 'live';
   const homeGoals = match.events.filter((e) => e.type === 'goal' && e.team === 'home');
   const awayGoals = match.events.filter((e) => e.type === 'goal' && e.team === 'away');
+  const homeWon = match.status === 'finished' && match.homeScore > match.awayScore;
+  const awayWon = match.status === 'finished' && match.awayScore > match.homeScore;
 
   return (
     <View
@@ -54,14 +56,18 @@ export function MatchScoreboardHero({ match }: Props) {
         <TeamFlag
           flagUrl={match.homeTeam.flagUrl}
           shortName={match.homeTeam.shortName}
-          isHome
+          isWinner={homeWon}
         />
 
         {/* Score */}
         <View className="flex-row items-center gap-x-3 px-4">
           <Text
             className="font-anybody-extrabold text-5xl"
-            style={{ color: colors.primaryContainer, letterSpacing: -0.96 }}
+            style={{
+              color: homeWon ? colors.primaryContainer : colors.onSurfaceVariant,
+              opacity: awayWon ? 0.4 : 1,
+              letterSpacing: -0.96,
+            }}
           >
             {match.homeScore}
           </Text>
@@ -73,7 +79,11 @@ export function MatchScoreboardHero({ match }: Props) {
           </Text>
           <Text
             className="font-anybody-extrabold text-5xl"
-            style={{ color: colors.onSurfaceVariant, opacity: 0.6, letterSpacing: -0.96 }}
+            style={{
+              color: awayWon ? colors.primaryContainer : colors.onSurfaceVariant,
+              opacity: homeWon ? 0.4 : 1,
+              letterSpacing: -0.96,
+            }}
           >
             {match.awayScore}
           </Text>
@@ -83,7 +93,7 @@ export function MatchScoreboardHero({ match }: Props) {
         <TeamFlag
           flagUrl={match.awayTeam.flagUrl}
           shortName={match.awayTeam.shortName}
-          isHome={false}
+          isWinner={awayWon}
         />
       </View>
 
@@ -106,11 +116,11 @@ export function MatchScoreboardHero({ match }: Props) {
 function TeamFlag({
   flagUrl,
   shortName,
-  isHome,
+  isWinner,
 }: {
   flagUrl: string;
   shortName: string;
-  isHome: boolean;
+  isWinner: boolean;
 }) {
   return (
     <View className="items-center gap-y-2">
@@ -118,10 +128,10 @@ function TeamFlag({
         className="w-16 h-16 rounded-full overflow-hidden p-0.5"
         style={{
           borderWidth: 2,
-          borderColor: isHome ? colors.primaryContainer : `${colors.outlineVariant}80`,
+          borderColor: isWinner ? colors.primaryContainer : `${colors.outlineVariant}80`,
           backgroundColor: colors.surface,
-          shadowColor: isHome ? colors.primary : 'transparent',
-          shadowOpacity: isHome ? 0.2 : 0,
+          shadowColor: isWinner ? colors.primary : 'transparent',
+          shadowOpacity: isWinner ? 0.2 : 0,
           shadowRadius: 15,
           shadowOffset: { width: 0, height: 0 },
         }}

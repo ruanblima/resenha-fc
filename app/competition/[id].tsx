@@ -4,8 +4,7 @@ import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../src/components/AppHeader';
-import { CompetitionMatchesScreen } from '../../src/components/competition/CompetitionMatchesScreen';
-import { getMatchesByCompetition } from '../../src/mocks/competitionMatches';
+import { CompetitionMatchesFeed } from '../../src/components/competition/CompetitionMatchesFeed';
 import { mockCompetitions } from '../../src/mocks/home';
 import { colors } from '../../src/theme';
 
@@ -31,16 +30,10 @@ export default function CompetitionPage() {
     );
   }
 
-  const matches = getMatchesByCompetition(competitionId);
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
       <AppHeader title={competition.name.toUpperCase()} showBack />
-      <CompetitionMatchesScreen
-        competition={competition}
-        matches={matches}
-        onPressMatch={(matchId) => router.push({ pathname: '/match/[id]', params: { id: matchId } })}
-      />
+      <CompetitionMatchesFeed competitionId={competitionId} />
     </SafeAreaView>
   );
 }

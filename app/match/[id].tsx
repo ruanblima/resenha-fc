@@ -1,31 +1,40 @@
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../src/components/AppHeader';
 import { MatchDetailScreen } from '../../src/components/match/MatchDetailScreen';
-import { mockMatchDetails } from '../../src/mocks/matchDetails';
+import { useMatchDetail } from '../../src/hooks/useMatchDetail';
 import { colors } from '../../src/theme';
 
 export default function MatchDetailPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const match = mockMatchDetails.find((m) => m.id === Number(id));
+  const fixtureId = Number(Array.isArray(id) ? id[0] : id);
 
-  if (!match) {
-    return (
-      <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color: colors.onSurfaceVariant }}>Partida não encontrada</Text>
-      </View>
-    );
-  }
+  const { data: match, isLoading, isError } = useMatchDetail(fixtureId);
 
-  const title = `${match.homeTeam.shortName} × ${match.awayTeam.shortName}`;
+  const title = match
+    ? `${match.homeTeam.shortName} × ${match.awayTeam.shortName}`
+    : '...';
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
       <AppHeader title={title} showBack />
-      <MatchDetailScreen match={match} />
+
+      {isLoading && (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      )}
+
+      {isError && (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: colors.onSurfaceVariant }}>Erro ao carregar partida</Text>
+        </View>
+      )}
+
+      {match && <MatchDetailScreen match={match} />}
     </SafeAreaView>
   );
 }

@@ -39,7 +39,7 @@ export interface LineupPlayer {
 export interface TeamLineup {
   formation: string;
   starters: LineupPlayer[];
-  bench: string[];
+  bench: LineupPlayer[];
 }
 
 export interface MatchLineup {

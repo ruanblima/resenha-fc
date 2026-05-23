@@ -46,6 +46,10 @@ export function MatchDetailScreen({ match }: Props) {
               lineup={match.lineup}
               homeTeam={match.homeTeam}
               awayTeam={match.awayTeam}
+              events={match.events}
+              homeScore={match.homeScore}
+              awayScore={match.awayScore}
+              status={match.status}
             />
           )}
 
