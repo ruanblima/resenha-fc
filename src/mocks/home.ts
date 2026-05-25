@@ -1,10 +1,11 @@
 import type { Competition, CountryLeagues, MatchDayItem, NewsItem } from '../types/home';
 
 export const mockCompetitions: Competition[] = [
-  { id: 'wc2026', name: 'Copa do Mundo 2026', category: 'Global Stage', icon: 'public', region: 'Americas', isActive: true },
-  { id: 'ucl', name: 'Champions League', category: 'Club Elite', icon: 'star', region: 'Europe' },
-  { id: 'pl', name: 'Premier League', category: 'Top Flight', icon: 'sports-soccer', region: 'England', isLive: true },
-  { id: 'euro2024', name: 'Euro 2024', category: 'Europa', icon: 'flag', region: 'Europe' },
+  { id: 'wc2026', name: 'Copa do Mundo 2026', category: 'Fase de Grupos', icon: 'emoji-events', region: 'Americas', location: 'EUA, Canadá & México', isActive: true },
+  { id: 'ucl', name: 'Champions League', category: 'Fase de Liga', icon: 'star', region: 'Europe', location: 'Europa' },
+  { id: 'pl', name: 'Premier League', category: 'Top Flight', icon: 'sports-soccer', region: 'England', location: 'Inglaterra', isLive: true },
+  { id: 'euro2024', name: 'Euro 2024', category: 'Fase de Grupos', icon: 'flag', region: 'Europe', location: 'Europa' },
+  { id: 'brasileirao', name: 'Brasileirão Série A', category: 'Campeonato Brasileiro', icon: 'sports-soccer', region: 'Brazil', location: 'Brasil' },
 ];
 
 export const mockCountryLeagues: CountryLeagues[] = [

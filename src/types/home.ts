@@ -10,6 +10,7 @@ export interface Competition {
   category: string;
   icon: MaterialIconName;
   region?: string;
+  location?: string;
   isActive?: boolean;
   isLive?: boolean;
 }
