@@ -42,17 +42,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="following"
-        options={{
-          title: 'Ligas',
-          tabBarIcon: ({ color }) => <TabIcon name="emoji-events" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="live"
         options={{
           title: 'Ao Vivo',
           tabBarIcon: ({ color }) => <TabIcon name="live-tv" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="following"
+        options={{
+          title: 'Ligas',
+          tabBarIcon: ({ color }) => <TabIcon name="emoji-events" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -64,10 +64,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="menu"
         options={{
-          title: 'Menu',
-          tabBarIcon: ({ color }) => <TabIcon name="more-horiz" color={color} />,
+          href: null,
         }}
       />
+
     </Tabs>
   );
 }
