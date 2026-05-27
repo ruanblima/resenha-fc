@@ -4,20 +4,41 @@ import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CompetitionLeagueTable } from '../../src/components/competition/CompetitionLeagueTable';
 import { CompetitionMatchesFeed } from '../../src/components/competition/CompetitionMatchesFeed';
 import { CompetitionStandingsTable } from '../../src/components/competition/CompetitionStandingsTable';
-import { mockCompetitions } from '../../src/mocks/home';
+import { useCompetitionStandings } from '../../src/hooks/useCompetitionStandings';
+import { mockCompetitions, mockCountryLeagues } from '../../src/mocks/home';
 import { colors } from '../../src/theme';
 import type { MaterialIconName } from '../../src/types/home';
 
 type HubTab = 'tabela' | 'jogos' | 'chaveamento' | 'estatisticas';
 
-const TABS: { id: HubTab; label: string }[] = [
+const ALL_TABS: { id: HubTab; label: string; groupsOnly?: boolean }[] = [
   { id: 'tabela', label: 'TABELA' },
   { id: 'jogos', label: 'JOGOS' },
-  { id: 'chaveamento', label: 'CHAVEAMENTO' },
+  { id: 'chaveamento', label: 'CHAVEAMENTO', groupsOnly: true },
   { id: 'estatisticas', label: 'ESTATÍSTICAS' },
 ];
+
+function findCompetition(id: string) {
+  const featured = mockCompetitions.find((c) => c.id === id);
+  if (featured) return featured;
+
+  for (const country of mockCountryLeagues) {
+    const league = country.leagues.find((l) => l.id === id);
+    if (league) {
+      return {
+        id: league.id,
+        name: league.name,
+        category: country.name,
+        icon: league.icon,
+        location: country.name,
+      };
+    }
+  }
+  return null;
+}
 
 export default function CompetitionPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,7 +46,10 @@ export default function CompetitionPage() {
   const [activeTab, setActiveTab] = useState<HubTab>('tabela');
 
   const competitionId = Array.isArray(id) ? id[0] : id;
-  const competition = mockCompetitions.find((c) => c.id === competitionId);
+  const competition = findCompetition(competitionId);
+  const { data: standingsData } = useCompetitionStandings(competitionId);
+  const isLeague = standingsData?.type === 'league';
+  const tabs = ALL_TABS.filter((t) => !t.groupsOnly || !isLeague);
 
   if (!competition) {
     return (
@@ -44,7 +68,7 @@ export default function CompetitionPage() {
           borderBottomColor: `${colors.outlineVariant}33`,
         }}
       >
-        {/* App bar: back + screen title */}
+        {/* App bar */}
         <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 12, paddingBottom: 4, gap: 8 }}>
           <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
             <MaterialIcons name="arrow-back" size={24} color={colors.onSurface} />
@@ -54,7 +78,7 @@ export default function CompetitionPage() {
           </Text>
         </View>
 
-        {/* Hero: large icon + name + location */}
+        {/* Hero */}
         <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 10, paddingBottom: 16, gap: 14 }}>
           <View
             style={{
@@ -86,9 +110,9 @@ export default function CompetitionPage() {
           </View>
         </View>
 
-        {/* Tab bar */}
+        {/* Tabs */}
         <View style={{ flexDirection: 'row' }}>
-          {TABS.map((tab) => {
+          {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <TouchableOpacity
@@ -120,7 +144,9 @@ export default function CompetitionPage() {
 
       {/* Content */}
       {activeTab === 'tabela' && (
-        <CompetitionStandingsTable competitionId={competitionId} />
+        isLeague
+          ? <CompetitionLeagueTable competitionId={competitionId} />
+          : <CompetitionStandingsTable competitionId={competitionId} />
       )}
 
       {activeTab === 'jogos' && (

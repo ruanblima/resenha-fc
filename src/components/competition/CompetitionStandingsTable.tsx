@@ -43,7 +43,7 @@ export function CompetitionStandingsTable({ competitionId }: Props) {
 }
 
 function GroupCard({ group }: { group: StandingGroup }) {
-  const qualifiedCount = group.entries.filter((e) => e.qualified).length;
+  const promotionCount = group.entries.filter((e) => e.zone === 'promotion').length;
 
   return (
     <View
@@ -104,7 +104,7 @@ function GroupCard({ group }: { group: StandingGroup }) {
           key={entry.team.id}
           entry={entry}
           isLast={index === group.entries.length - 1}
-          showQualifiedDivider={qualifiedCount > 0 && index === qualifiedCount - 1}
+          showPromotionDivider={promotionCount > 0 && index === promotionCount - 1}
         />
       ))}
     </View>
@@ -114,12 +114,14 @@ function GroupCard({ group }: { group: StandingGroup }) {
 function StandingRow({
   entry,
   isLast,
-  showQualifiedDivider,
+  showPromotionDivider,
 }: {
   entry: StandingEntry;
   isLast: boolean;
-  showQualifiedDivider: boolean;
+  showPromotionDivider: boolean;
 }) {
+  const isPromoted = entry.zone === 'promotion';
+
   return (
     <>
       <View
@@ -128,7 +130,7 @@ function StandingRow({
           alignItems: 'center',
           paddingHorizontal: 12,
           paddingVertical: 10,
-          backgroundColor: entry.qualified ? `${colors.primary}08` : 'transparent',
+          backgroundColor: isPromoted ? `${colors.primary}08` : 'transparent',
           borderBottomWidth: isLast ? 0 : 1,
           borderBottomColor: `${colors.outlineVariant}1A`,
         }}
@@ -145,12 +147,12 @@ function StandingRow({
           {entry.rank}
         </Text>
 
-        {/* Flag + name */}
+        {/* Image + name */}
         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Image
-            source={{ uri: entry.team.flagUrl }}
+            source={{ uri: entry.team.imageUrl }}
             style={{ width: 22, height: 16, borderRadius: 2 }}
-            resizeMode="cover"
+            resizeMode="contain"
           />
           <Text
             style={{
@@ -166,11 +168,11 @@ function StandingRow({
         </View>
 
         {/* Stats */}
-        <Text style={[styles.cell]}>{entry.played}</Text>
-        <Text style={[styles.cell]}>{entry.won}</Text>
-        <Text style={[styles.cell]}>{entry.drawn}</Text>
-        <Text style={[styles.cell]}>{entry.lost}</Text>
-        <Text style={[styles.cell]}>
+        <Text style={styles.cell}>{entry.played}</Text>
+        <Text style={styles.cell}>{entry.won}</Text>
+        <Text style={styles.cell}>{entry.drawn}</Text>
+        <Text style={styles.cell}>{entry.lost}</Text>
+        <Text style={styles.cell}>
           {entry.goalDiff > 0 ? `+${entry.goalDiff}` : entry.goalDiff}
         </Text>
         <Text style={[styles.cell, { color: colors.primary, fontFamily: 'AnyBody-Bold' }]}>
@@ -178,8 +180,8 @@ function StandingRow({
         </Text>
       </View>
 
-      {/* Qualified zone divider */}
-      {showQualifiedDivider && (
+      {/* Promotion zone divider */}
+      {showPromotionDivider && (
         <View
           style={{
             height: 2,

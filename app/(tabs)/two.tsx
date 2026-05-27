@@ -3,7 +3,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../src/components/AppHeader';
 import { SideMenu } from '../../src/components/SideMenu';
-import { mockCompetitions } from '../../src/mocks/home';
 import { StatsScreen } from '../../src/components/stats/StatsScreen';
 import {
   mockAssists,
@@ -23,7 +22,6 @@ const playersByCategory = {
 export default function StatsTab() {
   const [selectedCategory, setSelectedCategory] = useState<StatCategory>('scorers');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeCompetitionId, setActiveCompetitionId] = useState('wc2026');
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -35,13 +33,7 @@ export default function StatsTab() {
         groupStanding={mockGroupStanding}
         statLabel={statValueLabel[selectedCategory]}
       />
-      <SideMenu
-        visible={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        competitions={mockCompetitions}
-        activeCompetitionId={activeCompetitionId}
-        onSelectCompetition={(id) => setActiveCompetitionId(id)}
-      />
+      <SideMenu visible={menuOpen} onClose={() => setMenuOpen(false)} />
     </SafeAreaView>
   );
 }

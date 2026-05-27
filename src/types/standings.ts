@@ -1,6 +1,6 @@
 export interface StandingEntry {
   rank: number;
-  team: { id: number; name: string; shortName: string; flagUrl: string };
+  team: { id: number; name: string; shortName: string; imageUrl: string };
   points: number;
   played: number;
   won: number;
@@ -9,7 +9,7 @@ export interface StandingEntry {
   goalsFor: number;
   goalsAgainst: number;
   goalDiff: number;
-  qualified: boolean;
+  zone: string | null;
 }
 
 export interface StandingGroup {
@@ -18,5 +18,6 @@ export interface StandingGroup {
 }
 
 export interface CompetitionStandings {
+  type: 'groups' | 'league';
   groups: StandingGroup[];
 }

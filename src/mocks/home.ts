@@ -6,6 +6,7 @@ export const mockCompetitions: Competition[] = [
   { id: 'pl', name: 'Premier League', category: 'Top Flight', icon: 'sports-soccer', region: 'England', location: 'Inglaterra', isLive: true },
   { id: 'euro2024', name: 'Euro 2024', category: 'Fase de Grupos', icon: 'flag', region: 'Europe', location: 'Europa' },
   { id: 'brasileirao', name: 'Brasileirão Série A', category: 'Campeonato Brasileiro', icon: 'sports-soccer', region: 'Brazil', location: 'Brasil' },
+  { id: 'serie-b', name: 'Brasileirão Série B', category: 'Campeonato Brasileiro', icon: 'sports-soccer', region: 'Brazil', location: 'Brasil' },
 ];
 
 export const mockCountryLeagues: CountryLeagues[] = [
@@ -13,7 +14,7 @@ export const mockCountryLeagues: CountryLeagues[] = [
     id: 'brazil',
     name: 'Brasil',
     leagues: [
-      { id: 'serie-a', name: 'Série A', icon: 'sports-soccer' },
+      { id: 'brasileirao', name: 'Série A', icon: 'sports-soccer' },
       { id: 'serie-b', name: 'Série B', icon: 'sports-soccer' },
       { id: 'copa-brasil', name: 'Copa do Brasil', icon: 'emoji-events' },
     ],
