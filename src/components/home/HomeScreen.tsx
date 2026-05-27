@@ -1,119 +1,211 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { colors } from '../../theme';
-import type { Competition, MatchDayItem, NewsItem } from '../../types/home';
-import { CompetitionCarousel } from './CompetitionCarousel';
-import { MatchDayCard } from './MatchDayCard';
+import type { MatchSummary } from '../../types/api';
+import type { NewsItem } from '../../types/home';
+import type { StandingGroup } from '../../types/standings';
+import { sortGroupsByUserCountry } from '../../utils/locale';
+import { GroupsCarousel } from './GroupsCarousel';
+import { LiveActionCard } from './LiveActionCard';
 import { NewsCard } from './NewsCard';
+import { NoLiveMatches } from './NoLiveMatches';
+import { NoMatchesToday } from './NoMatchesToday';
+import { TodayMatchRow } from './TodayMatchRow';
 
 interface Props {
-  competitions: Competition[];
-  matchDayItems: MatchDayItem[];
+  live: MatchSummary[];
+  upcoming: MatchSummary[];
+  groups?: StandingGroup[];
   newsItems: NewsItem[];
-  liveCount?: number;
-  onSelectCompetition?: (id: string) => void;
+  isLoading?: boolean;
   onPressMatch?: (id: number) => void;
-  onPressNews?: (id: string) => void;
-  onSeeAllMatches?: () => void;
+  onPressHub?: () => void;
+  onSaveMatch?: (matchId: number, saved: boolean) => void;
 }
 
 export function HomeScreen({
-  competitions,
-  matchDayItems,
+  live,
+  upcoming,
+  groups,
   newsItems,
-  liveCount,
-  onSelectCompetition,
+  isLoading,
   onPressMatch,
-  onPressNews,
-  onSeeAllMatches,
+  onPressHub,
+  onSaveMatch,
 }: Props) {
-  const liveMatches = liveCount ?? matchDayItems.filter((m) => m.status === 'live').length;
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
-    <ScrollView className="flex-1 bg-background" showsVerticalScrollIndicator={false}>
-      {/* Competition Carousel */}
-      <View className="pt-4">
-        <CompetitionCarousel competitions={competitions} onSelect={onSelectCompetition} />
-      </View>
+    <ScrollView
+      style={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ paddingTop: 20, paddingBottom: 40 }}
+    >
+      {/* ── SEM JOGOS HOJE ───────────────────────────────── */}
+      {live.length === 0 && upcoming.length === 0 && (
+        <NoMatchesToday onPressCalendar={onPressHub} />
+      )}
 
-      {/* Matches of the Day header */}
-      <View className="flex-row items-center px-4 mb-4">
-        <View
-          style={{
-            width: 4,
-            height: 22,
-            borderRadius: 2,
-            backgroundColor: colors.primary,
-            marginRight: 10,
-          }}
-        />
-        <Text className="font-anybody-bold text-xl text-on-surface uppercase tracking-tight flex-1">
-          JOGOS DO DIA
-        </Text>
-        {liveMatches > 0 && (
-          <View
-            className="flex-row items-center gap-x-1 px-2 py-1 rounded-full"
-            style={{
-              backgroundColor: `${colors.secondary}1A`,
-              borderWidth: 1,
-              borderColor: `${colors.secondary}33`,
-            }}
-          >
-            <View className="w-2 h-2 rounded-full bg-secondary" />
-            <Text className="font-inter-semibold text-secondary" style={{ fontSize: 10 }}>
-              {liveMatches} AO VIVO
-            </Text>
+      {/* ── SEM LIVE, MAS TEM JOGOS HOJE ─────────────────── */}
+      {live.length === 0 && upcoming.length > 0 && (
+        <View style={{ marginBottom: 8 }}>
+          <SectionHeader title="AO VIVO AGORA" />
+          <NoLiveMatches nextMatch={upcoming[0]} />
+        </View>
+      )}
+
+      {/* ── AO VIVO AGORA ────────────────────────────────── */}
+      {live.length > 0 && (
+        <View style={{ marginBottom: 8 }}>
+          <SectionHeader title="AO VIVO AGORA" />
+          <LiveActionCard matches={live} onPressMatch={onPressMatch} />
+        </View>
+      )}
+
+      {/* ── JOGOS DE HOJE ────────────────────────────────── */}
+      {upcoming.length > 0 && (
+        <View style={{ marginBottom: 8 }}>
+          <SectionHeader title="JOGOS DE HOJE" />
+          <View style={{ paddingHorizontal: 16, gap: 8 }}>
+            {upcoming.map((match) => (
+              <TodayMatchRow
+                key={match.id}
+                match={match}
+                onPress={onPressMatch ? () => onPressMatch(match.id) : undefined}
+                onSave={onSaveMatch}
+              />
+            ))}
           </View>
-        )}
-        <Pressable onPress={onSeeAllMatches} className="ml-3">
-          <Text className="font-inter-semibold text-xs tracking-widest text-primary uppercase">
-            VER TODOS
-          </Text>
-        </Pressable>
+        </View>
+      )}
+
+      {/* ── EXPLORAR O HUB ───────────────────────────────── */}
+      <ExploreHubCard onPress={onPressHub} />
+
+      {/* ── GRUPOS ───────────────────────────────────────── */}
+      {groups && groups.length > 0 && (
+        <View style={{ marginBottom: 8 }}>
+          <SectionHeader title="GRUPOS" />
+          <GroupsCarousel
+            groups={sortGroupsByUserCountry(groups)}
+            onPressGroup={onPressHub}
+          />
+        </View>
+      )}
+
+      {/* ── NOTÍCIAS ─────────────────────────────────────── */}
+      {newsItems.length > 0 && (
+        <View style={{ marginTop: 8 }}>
+          <SectionHeader title="NOTÍCIAS" />
+          {newsItems.map((news, index) => (
+            <NewsCard
+              key={news.id}
+              news={news}
+              variant={index === 0 ? 'hero' : 'compact'}
+            />
+          ))}
+        </View>
+      )}
+    </ScrollView>
+  );
+}
+
+/* ── Sub-components ─────────────────────────────────────── */
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        marginBottom: 12,
+        gap: 10,
+      }}
+    >
+      <View
+        style={{ width: 3, height: 18, borderRadius: 2, backgroundColor: colors.primary }}
+      />
+      <Text
+        style={{
+          fontFamily: 'AnyBody-Bold',
+          fontSize: 13,
+          color: colors.onSurface,
+          letterSpacing: 1.2,
+        }}
+      >
+        {title}
+      </Text>
+    </View>
+  );
+}
+
+function ExploreHubCard({ onPress }: { onPress?: () => void }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        marginHorizontal: 16,
+        marginVertical: 20,
+        backgroundColor: colors.surfaceHigh,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: `${colors.primary}30`,
+        padding: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 16,
+      }}
+    >
+      {/* Trophy icon */}
+      <View
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: 12,
+          backgroundColor: `${colors.primary}18`,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderWidth: 1,
+          borderColor: `${colors.primary}30`,
+        }}
+      >
+        <MaterialIcons name="emoji-events" size={26} color={colors.primary} />
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16, gap: 16, paddingBottom: 16 }}
-        snapToAlignment="start"
-        decelerationRate="fast"
-      >
-        {matchDayItems.map((match) => (
-          <MatchDayCard
-            key={match.id}
-            match={match}
-            onPress={onPressMatch ? () => onPressMatch(match.id) : undefined}
-          />
-        ))}
-      </ScrollView>
-
-      {/* Latest Headlines header */}
-      <View className="flex-row items-center px-4 mt-4 mb-4">
-        <View
+      {/* Text */}
+      <View style={{ flex: 1, gap: 3 }}>
+        <Text
           style={{
-            width: 4,
-            height: 22,
-            borderRadius: 2,
-            backgroundColor: colors.primary,
-            marginRight: 10,
+            fontFamily: 'AnyBody-ExtraBold',
+            fontSize: 15,
+            color: colors.onSurface,
+            lineHeight: 20,
           }}
-        />
-        <Text className="font-anybody-bold text-xl text-on-surface uppercase tracking-tight">
-          ÚLTIMAS NOTÍCIAS
+        >
+          Copa do Mundo 2026
+        </Text>
+        <Text
+          style={{
+            fontFamily: 'WorkSans-Regular',
+            fontSize: 12,
+            color: colors.onSurfaceVariant,
+          }}
+        >
+          Tabela, estatísticas e chaveamento
         </Text>
       </View>
 
-      {newsItems.map((news) => (
-        <NewsCard
-          key={news.id}
-          news={news}
-          onPress={onPressNews ? () => onPressNews(news.id) : undefined}
-        />
-      ))}
-
-      <View className="h-6" />
-    </ScrollView>
+      {/* Arrow */}
+      <MaterialIcons name="chevron-right" size={20} color={colors.onSurfaceVariant} />
+    </Pressable>
   );
 }

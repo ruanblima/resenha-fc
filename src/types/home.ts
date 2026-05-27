@@ -52,4 +52,5 @@ export interface NewsItem {
   title: string;
   excerpt: string;
   imageUrl: string;
+  readTime?: string;
 }
