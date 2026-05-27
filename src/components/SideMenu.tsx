@@ -14,23 +14,19 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '../theme';
-import type { Competition } from '../types/home';
 
 const DRAWER_WIDTH = Math.min(Dimensions.get('window').width * 0.82, 320);
 
 interface Props {
   visible: boolean;
   onClose: () => void;
-  competitions: Competition[];
-  activeCompetitionId?: string;
-  onSelectCompetition?: (id: string) => void;
 }
 
 const LEAGUE_ITEMS = [
   { id: 'wc2026', name: 'Copa do Mundo 2026', icon: 'public' as const },
   { id: 'ucl', name: 'Champions League', icon: 'star' as const },
   { id: 'pl', name: 'Premier League', icon: 'sports-soccer' as const },
-  { id: 'euro2024', name: 'Euro 2024', icon: 'flag' as const },
+  { id: 'brasileirao', name: 'Brasileirão Série A', icon: 'sports-soccer' as const },
   { id: 'all', name: 'Ver Todas as Ligas', icon: 'grid-view' as const },
 ];
 
@@ -39,12 +35,7 @@ const ACCOUNT_ITEMS = [
   { id: 'settings', name: 'Configurações', icon: 'settings' as const },
 ];
 
-export function SideMenu({
-  visible,
-  onClose,
-  activeCompetitionId,
-  onSelectCompetition,
-}: Props) {
+export function SideMenu({ visible, onClose }: Props) {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
@@ -137,26 +128,21 @@ export function SideMenu({
           {/* SELECT LEAGUE */}
           <SectionLabel label="SELECIONAR LIGA" />
           <View className="px-3 gap-y-0.5 mb-8">
-            {LEAGUE_ITEMS.map((item) => {
-              const isActive = item.id === activeCompetitionId;
-              return (
+            {LEAGUE_ITEMS.map((item) => (
                 <MenuRow
                   key={item.id}
                   icon={item.icon}
                   label={item.name}
-                  isActive={isActive}
                   onPress={() => {
+                    closeDrawer();
                     if (item.id === 'all') {
-                      closeDrawer();
-                      setTimeout(() => router.push('/competitions'), 300);
+                      setTimeout(() => router.push('/(tabs)/following'), 300);
                     } else {
-                      onSelectCompetition?.(item.id);
-                      closeDrawer();
+                      setTimeout(() => router.push({ pathname: '/competition/[id]', params: { id: item.id } }), 300);
                     }
                   }}
                 />
-              );
-            })}
+            ))}
           </View>
 
           {/* ACCOUNT */}

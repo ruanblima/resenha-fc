@@ -10,7 +10,6 @@ import { mockCompetitions, mockMatchDayItems, mockNewsItems } from '../../src/mo
 export default function HomeTab() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeCompetitionId, setActiveCompetitionId] = useState('wc2026');
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -25,12 +24,6 @@ export default function HomeTab() {
       <SideMenu
         visible={menuOpen}
         onClose={() => setMenuOpen(false)}
-        competitions={mockCompetitions}
-        activeCompetitionId={activeCompetitionId}
-        onSelectCompetition={(id) => {
-          setActiveCompetitionId(id);
-          setMenuOpen(false);
-        }}
       />
     </SafeAreaView>
   );
