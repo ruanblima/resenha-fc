@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CompetitionLeagueTable } from '../../src/components/competition/CompetitionLeagueTable';
 import { CompetitionMatchesFeed } from '../../src/components/competition/CompetitionMatchesFeed';
 import { CompetitionStandingsTable } from '../../src/components/competition/CompetitionStandingsTable';
+import { CompetitionStatsScreen } from '../../src/components/competition/CompetitionStatsScreen';
 import { useCompetitionStandings } from '../../src/hooks/useCompetitionStandings';
 import { mockCompetitions, mockCountryLeagues } from '../../src/mocks/home';
 import { colors } from '../../src/theme';
@@ -153,13 +154,17 @@ export default function CompetitionPage() {
         <CompetitionMatchesFeed competitionId={competitionId} />
       )}
 
-      {(activeTab === 'chaveamento' || activeTab === 'estatisticas') && (
+      {activeTab === 'chaveamento' && (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 }}>
           <MaterialIcons name="construction" size={40} color={colors.onSurfaceVariant} />
           <Text style={{ fontFamily: 'WorkSans-Regular', fontSize: 14, color: colors.onSurfaceVariant }}>
             Em breve
           </Text>
         </View>
+      )}
+
+      {activeTab === 'estatisticas' && (
+        <CompetitionStatsScreen competitionId={competitionId} />
       )}
     </SafeAreaView>
   );
