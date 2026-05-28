@@ -14,6 +14,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '../theme';
+import { FEATURED_COMPETITIONS } from '../constants/competitions';
 
 const DRAWER_WIDTH = Math.min(Dimensions.get('window').width * 0.82, 320);
 
@@ -23,10 +24,7 @@ interface Props {
 }
 
 const LEAGUE_ITEMS = [
-  { id: 'wc2026', name: 'Copa do Mundo 2026', icon: 'public' as const },
-  { id: 'ucl', name: 'Champions League', icon: 'star' as const },
-  { id: 'pl', name: 'Premier League', icon: 'sports-soccer' as const },
-  { id: 'brasileirao', name: 'Brasileirão Série A', icon: 'sports-soccer' as const },
+  ...FEATURED_COMPETITIONS,
   { id: 'all', name: 'Ver Todas as Ligas', icon: 'grid-view' as const },
 ];
 
