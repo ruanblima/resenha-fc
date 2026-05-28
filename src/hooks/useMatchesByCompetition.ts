@@ -9,18 +9,10 @@ export function useMatchesByCompetition(competitionId: string) {
   return useInfiniteQuery<MatchesPage, Error>({
     queryKey: ['matches', competitionId],
     queryFn: async ({ pageParam }) => {
-      console.log('[useMatchesByCompetition] fetching page', pageParam, 'for', competitionId);
-      try {
-        const result = await apiFetch<MatchesPage>('/matches', {
-          competition: competitionId,
-          page: pageParam as number,
-        });
-        console.log('[useMatchesByCompetition] success:', result);
-        return result;
-      } catch (err) {
-        console.error('[useMatchesByCompetition] error:', err);
-        throw err;
-      }
+      return apiFetch<MatchesPage>('/matches', {
+        competition: competitionId,
+        page: pageParam as number,
+      });
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>

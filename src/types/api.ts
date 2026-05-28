@@ -18,6 +18,8 @@ export interface MatchSummary {
   awayScore?: number;
   minute?: number;
   startTime?: string;
+  /** ISO date YYYY-MM-DD */
+  date?: string;
   venue?: string;
 }
 
