@@ -13,7 +13,8 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { loadRemoteConfig } from '../src/lib/remoteConfig';
 import 'react-native-reanimated';
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [configReady, setConfigReady] = useState(false);
   const [loaded, error] = useFonts({
     Anybody_400Regular,
     Anybody_700Bold,
@@ -37,14 +39,18 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    loadRemoteConfig().finally(() => setConfigReady(true));
+  }, []);
+
+  useEffect(() => {
     if (error) throw error;
   }, [error]);
 
   useEffect(() => {
-    if (loaded) SplashScreen.hideAsync();
-  }, [loaded]);
+    if (loaded && configReady) SplashScreen.hideAsync();
+  }, [loaded, configReady]);
 
-  if (!loaded) return null;
+  if (!loaded || !configReady) return null;
 
   return (
     <QueryClientProvider client={queryClient}>
