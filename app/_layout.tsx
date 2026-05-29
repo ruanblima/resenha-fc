@@ -1,4 +1,5 @@
 import '../global.css';
+import 'react-native-url-polyfill/auto';
 
 import {
   Anybody_400Regular,
