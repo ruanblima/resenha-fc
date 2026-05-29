@@ -40,6 +40,12 @@
           "sounds": [],
           "enableBackgroundRemoteNotifications": false
         }
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-3363106042195024~1388850276"
+        }
       ]
     ],
     "updates": {
