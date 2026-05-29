@@ -1,26 +1,29 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Linking } from 'react-native';
 import React from 'react';
 import { Image, ImageBackground, Pressable, Text, View } from 'react-native';
 
 import { colors } from '../../theme';
-import type { NewsItem } from '../../types/home';
+import type { NewsArticle } from '../../types/api';
 
 interface Props {
-  news: NewsItem;
+  news: NewsArticle;
   variant?: 'hero' | 'compact';
   onPress?: () => void;
 }
 
 export function NewsCard({ news, variant = 'hero', onPress }: Props) {
+  const handlePress = onPress ?? (() => Linking.openURL(news.url));
+
   if (variant === 'compact') {
-    return <CompactNewsCard news={news} onPress={onPress} />;
+    return <CompactNewsCard news={news} onPress={handlePress} />;
   }
-  return <HeroNewsCard news={news} onPress={onPress} />;
+  return <HeroNewsCard news={news} onPress={handlePress} />;
 }
 
 /* ── Hero card ──────────────────────────────────────────── */
-function HeroNewsCard({ news, onPress }: { news: NewsItem; onPress?: () => void }) {
+function HeroNewsCard({ news, onPress }: { news: NewsArticle; onPress: () => void }) {
   return (
     <Pressable
       testID="news-card"
@@ -35,14 +38,18 @@ function HeroNewsCard({ news, onPress }: { news: NewsItem; onPress?: () => void 
         borderColor: `${colors.outlineVariant}40`,
       }}
     >
-      <ImageBackground source={{ uri: news.imageUrl }} style={{ flex: 1 }} resizeMode="cover">
+      <ImageBackground
+        source={news.imageUrl ? { uri: news.imageUrl } : undefined}
+        style={{ flex: 1, backgroundColor: colors.surfaceContainer }}
+        resizeMode="cover"
+      >
         <LinearGradient
           colors={['transparent', `${colors.surfaceContainerLowest}E6`, colors.surfaceContainerLowest]}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={{ flex: 1, justifyContent: 'flex-end', padding: 16 }}
         >
-          {/* Category + read time */}
+          {/* Source badge */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <View
               style={{
@@ -61,32 +68,31 @@ function HeroNewsCard({ news, onPress }: { news: NewsItem; onPress?: () => void 
                   color: colors.primary,
                   letterSpacing: 1.2,
                 }}
+                numberOfLines={1}
               >
-                {news.category}
+                {news.source.toUpperCase()}
               </Text>
             </View>
 
-            {news.readTime && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                <MaterialIcons name="schedule" size={11} color={colors.onSurfaceVariant} />
-                <Text
-                  style={{
-                    fontFamily: 'Inter_600SemiBold',
-                    fontSize: 10,
-                    color: colors.onSurfaceVariant,
-                    letterSpacing: 0.5,
-                  }}
-                >
-                  {news.readTime} DE LEITURA
-                </Text>
-              </View>
-            )}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <MaterialIcons name="schedule" size={11} color={colors.onSurfaceVariant} />
+              <Text
+                style={{
+                  fontFamily: 'Inter_600SemiBold',
+                  fontSize: 10,
+                  color: colors.onSurfaceVariant,
+                  letterSpacing: 0.5,
+                }}
+              >
+                {news.publishedAgo}
+              </Text>
+            </View>
           </View>
 
           {/* Title */}
           <Text
             style={{
-              fontFamily: 'AnyBody-Bold',
+              fontFamily: 'Anybody_700Bold',
               fontSize: 16,
               color: colors.onSurface,
               lineHeight: 22,
@@ -102,7 +108,7 @@ function HeroNewsCard({ news, onPress }: { news: NewsItem; onPress?: () => void 
 }
 
 /* ── Compact card ───────────────────────────────────────── */
-function CompactNewsCard({ news, onPress }: { news: NewsItem; onPress?: () => void }) {
+function CompactNewsCard({ news, onPress }: { news: NewsArticle; onPress: () => void }) {
   return (
     <Pressable
       testID="news-card"
@@ -131,16 +137,28 @@ function CompactNewsCard({ news, onPress }: { news: NewsItem; onPress?: () => vo
           flexShrink: 0,
         }}
       >
-        <Image
-          source={{ uri: news.imageUrl }}
-          style={{ width: '100%', height: '100%' }}
-          resizeMode="cover"
-        />
+        {news.imageUrl ? (
+          <Image
+            source={{ uri: news.imageUrl }}
+            style={{ width: '100%', height: '100%' }}
+            resizeMode="cover"
+          />
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <MaterialIcons name="article" size={24} color={colors.onSurfaceVariant} />
+          </View>
+        )}
       </View>
 
       {/* Text */}
       <View style={{ flex: 1, gap: 6 }}>
-        {/* Category + read time */}
+        {/* Source + time */}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Text
             style={{
@@ -149,31 +167,30 @@ function CompactNewsCard({ news, onPress }: { news: NewsItem; onPress?: () => vo
               color: colors.primary,
               letterSpacing: 1.2,
             }}
+            numberOfLines={1}
           >
-            {news.category}
+            {news.source.toUpperCase()}
           </Text>
 
-          {news.readTime && (
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-              <MaterialIcons name="schedule" size={10} color={`${colors.onSurfaceVariant}99`} />
-              <Text
-                style={{
-                  fontFamily: 'Inter_600SemiBold',
-                  fontSize: 9,
-                  color: `${colors.onSurfaceVariant}99`,
-                  letterSpacing: 0.4,
-                }}
-              >
-                {news.readTime}
-              </Text>
-            </View>
-          )}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <MaterialIcons name="schedule" size={10} color={`${colors.onSurfaceVariant}99`} />
+            <Text
+              style={{
+                fontFamily: 'Inter_600SemiBold',
+                fontSize: 9,
+                color: `${colors.onSurfaceVariant}99`,
+                letterSpacing: 0.4,
+              }}
+            >
+              {news.publishedAgo}
+            </Text>
+          </View>
         </View>
 
         {/* Title */}
         <Text
           style={{
-            fontFamily: 'AnyBody-Bold',
+            fontFamily: 'Anybody_700Bold',
             fontSize: 13,
             color: colors.onSurface,
             lineHeight: 18,
@@ -183,16 +200,19 @@ function CompactNewsCard({ news, onPress }: { news: NewsItem; onPress?: () => vo
           {news.title}
         </Text>
 
-        {/* Published */}
-        <Text
-          style={{
-            fontFamily: 'WorkSans-Regular',
-            fontSize: 11,
-            color: colors.onSurfaceVariant,
-          }}
-        >
-          {news.publishedAt}
-        </Text>
+        {/* Excerpt */}
+        {!!news.excerpt && (
+          <Text
+            style={{
+              fontFamily: 'WorkSans-Regular',
+              fontSize: 11,
+              color: colors.onSurfaceVariant,
+            }}
+            numberOfLines={1}
+          >
+            {news.excerpt}
+          </Text>
+        )}
       </View>
     </Pressable>
   );

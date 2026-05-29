@@ -4,10 +4,12 @@ import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { BracketScreen } from '../../src/components/competition/BracketScreen';
 import { CompetitionLeagueTable } from '../../src/components/competition/CompetitionLeagueTable';
 import { CompetitionMatchesFeed } from '../../src/components/competition/CompetitionMatchesFeed';
 import { CompetitionStandingsTable } from '../../src/components/competition/CompetitionStandingsTable';
 import { CompetitionStatsScreen } from '../../src/components/competition/CompetitionStatsScreen';
+import { BRACKET_COMPETITIONS, KNOCKOUT_ONLY_COMPETITIONS } from '../../src/constants/competitions';
 import { useCompetitionStandings } from '../../src/hooks/useCompetitionStandings';
 import { mockCompetitions, mockCountryLeagues } from '../../src/mocks/home';
 import { colors } from '../../src/theme';
@@ -15,10 +17,19 @@ import type { MaterialIconName } from '../../src/types/home';
 
 type HubTab = 'tabela' | 'jogos' | 'chaveamento' | 'estatisticas';
 
-const ALL_TABS: { id: HubTab; label: string; groupsOnly?: boolean }[] = [
-  { id: 'tabela', label: 'TABELA' },
-  { id: 'jogos', label: 'JOGOS' },
-  { id: 'chaveamento', label: 'CHAVEAMENTO', groupsOnly: true },
+interface TabDef {
+  id: HubTab;
+  label: string;
+  /** Só aparece em competições com mata-mata */
+  bracketOnly?: boolean;
+  /** Oculta em competições sem fase de grupos/tabela */
+  hideForKnockoutOnly?: boolean;
+}
+
+const ALL_TABS: TabDef[] = [
+  { id: 'tabela',      label: 'TABELA',      hideForKnockoutOnly: true },
+  { id: 'jogos',       label: 'JOGOS' },
+  { id: 'chaveamento', label: 'MATA MATA',   bracketOnly: true },
   { id: 'estatisticas', label: 'ESTATÍSTICAS' },
 ];
 
@@ -44,13 +55,22 @@ function findCompetition(id: string) {
 export default function CompetitionPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<HubTab>('tabela');
+  const [activeTab, setActiveTab] = useState<HubTab>(() =>
+    KNOCKOUT_ONLY_COMPETITIONS.has(Array.isArray(id) ? id[0] : (id ?? '')) ? 'chaveamento' : 'tabela'
+  );
 
   const competitionId = Array.isArray(id) ? id[0] : id;
   const competition = findCompetition(competitionId);
   const { data: standingsData } = useCompetitionStandings(competitionId);
-  const isLeague = standingsData?.type === 'league';
-  const tabs = ALL_TABS.filter((t) => !t.groupsOnly || !isLeague);
+  const hasBracket = BRACKET_COMPETITIONS.has(competitionId);
+  const isKnockoutOnly = KNOCKOUT_ONLY_COMPETITIONS.has(competitionId);
+
+  const tabs = ALL_TABS.filter((t) => {
+    if (t.bracketOnly && !hasBracket) return false;
+    if (t.hideForKnockoutOnly && isKnockoutOnly) return false;
+    return true;
+  });
+
 
   if (!competition) {
     return (
@@ -145,7 +165,7 @@ export default function CompetitionPage() {
 
       {/* Content */}
       {activeTab === 'tabela' && (
-        isLeague
+        standingsData?.type === 'league'
           ? <CompetitionLeagueTable competitionId={competitionId} />
           : <CompetitionStandingsTable competitionId={competitionId} />
       )}
@@ -155,12 +175,7 @@ export default function CompetitionPage() {
       )}
 
       {activeTab === 'chaveamento' && (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-          <MaterialIcons name="construction" size={40} color={colors.onSurfaceVariant} />
-          <Text style={{ fontFamily: 'WorkSans-Regular', fontSize: 14, color: colors.onSurfaceVariant }}>
-            Em breve
-          </Text>
-        </View>
+        <BracketScreen competitionId={competitionId} />
       )}
 
       {activeTab === 'estatisticas' && (

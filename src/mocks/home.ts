@@ -3,12 +3,12 @@ import type { Competition, CountryLeagues, MatchDayItem, NewsItem } from '../typ
 import type { CompetitionStandings } from '../types/standings';
 
 export const mockCompetitions: Competition[] = [
-  { id: 'wc2026', name: 'Copa do Mundo 2026', category: 'Fase de Grupos', icon: 'emoji-events', region: 'Americas', location: 'EUA, Canadá & México', isActive: true },
-  { id: 'ucl', name: 'Champions League', category: 'Fase de Liga', icon: 'star', region: 'Europe', location: 'Europa' },
-  { id: 'pl', name: 'Premier League', category: 'Top Flight', icon: 'sports-soccer', region: 'England', location: 'Inglaterra', isLive: true },
-  { id: 'euro2024', name: 'Euro 2024', category: 'Fase de Grupos', icon: 'flag', region: 'Europe', location: 'Europa' },
-  { id: 'brasileirao', name: 'Brasileirão Série A', category: 'Campeonato Brasileiro', icon: 'sports-soccer', region: 'Brazil', location: 'Brasil' },
-  { id: 'serie-b', name: 'Brasileirão Série B', category: 'Campeonato Brasileiro', icon: 'sports-soccer', region: 'Brazil', location: 'Brasil' },
+  { id: 'wc2026',             name: 'Copa do Mundo 2026',  category: 'Fase de Grupos',  icon: 'emoji-events', region: 'Americas', location: 'EUA, Canadá & México', isActive: true },
+  { id: 'ucl',                name: 'Champions League',    category: 'Fase de Liga',    icon: 'star',         region: 'Europa',   location: 'Europa' },
+  { id: 'libertadores',       name: 'Copa Libertadores',   category: 'Fase de Grupos',  icon: 'emoji-events', region: 'América',  location: 'América do Sul' },
+  { id: 'europa-league',      name: 'Liga Europa',         category: 'Fase de Liga',    icon: 'star',         region: 'Europa',   location: 'Europa' },
+  { id: 'sul-americana',      name: 'Copa Sul-Americana',  category: 'Fase de Grupos',  icon: 'emoji-events', region: 'América',  location: 'América do Sul' },
+  { id: 'conference-league',  name: 'Conference League',   category: 'Fase de Liga',    icon: 'star',         region: 'Europa',   location: 'Europa' },
 ];
 
 export const mockCountryLeagues: CountryLeagues[] = [

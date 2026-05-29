@@ -14,10 +14,12 @@ interface Props {
 }
 
 const CARD_BACKGROUNDS: Record<string, string> = {
-  wc2026: '#1a2a1a',
-  ucl: '#1a1a2a',
-  pl: '#2a1a1a',
-  euro2024: '#1a221a',
+  wc2026:            '#1a2a1a',
+  ucl:               '#1a1a2a',
+  libertadores:      '#1a2a1a',
+  'europa-league':   '#1a1f2a',
+  'sul-americana':   '#2a1a1f',
+  'conference-league': '#1a2a24',
 };
 
 export function CompetitionsScreen({
@@ -34,29 +36,17 @@ export function CompetitionsScreen({
     >
       {/* International section */}
       <View style={{ marginTop: 24, paddingHorizontal: 16 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <Text
-            style={{
-              fontFamily: 'Anybody_700Bold',
-              fontSize: 18,
-              color: colors.onSurface,
-              letterSpacing: 0.5,
-            }}
-          >
-            INTERNACIONAL
-          </Text>
-          <Text
-            style={{
-              fontFamily: 'Inter_600SemiBold',
-              fontSize: 12,
-              color: colors.primary,
-              letterSpacing: 1,
-              textTransform: 'uppercase',
-            }}
-          >
-            Ver Tudo
-          </Text>
-        </View>
+        <Text
+          style={{
+            fontFamily: 'Anybody_700Bold',
+            fontSize: 18,
+            color: colors.onSurface,
+            letterSpacing: 0.5,
+            marginBottom: 16,
+          }}
+        >
+          INTERNACIONAL
+        </Text>
 
         <ScrollView
           horizontal

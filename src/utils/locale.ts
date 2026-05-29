@@ -1,3 +1,4 @@
+import { getLocales } from 'expo-localization';
 import type { StandingGroup } from '../types/standings';
 
 /**
@@ -34,17 +35,35 @@ const COUNTRY_CODE_TO_SHORT: Record<string, string> = {
 };
 
 /**
- * Returns the ISO 3166-1 alpha-2 country code from the device locale.
+ * Returns the full device locale string using expo-localization (reliable on RN/Hermes).
+ * e.g. 'pt-BR', 'en-US'
+ */
+export function getDeviceLocale(): string {
+  try {
+    return getLocales()[0]?.languageTag ?? '';
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Returns the ISO 3166-1 alpha-2 region code from the device locale.
  * e.g. 'pt-BR' → 'BR', 'en-US' → 'US'
  */
 export function getDeviceCountryCode(): string {
   try {
-    const locale = Intl.DateTimeFormat().resolvedOptions().locale; // e.g. 'pt-BR'
-    const parts = locale.split('-');
-    return parts[parts.length - 1].toUpperCase();
+    return getLocales()[0]?.regionCode?.toUpperCase() ?? '';
   } catch {
     return '';
   }
+}
+
+/**
+ * Returns true if the device locale is pt-BR (Brazilian Portuguese).
+ */
+export function isPtBR(): boolean {
+  const locale = getLocales()[0];
+  return locale?.languageCode === 'pt' && locale?.regionCode === 'BR';
 }
 
 /**

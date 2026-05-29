@@ -3,8 +3,7 @@ import React from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { colors } from '../../theme';
-import type { MatchSummary } from '../../types/api';
-import type { NewsItem } from '../../types/home';
+import type { MatchSummary, NewsArticle } from '../../types/api';
 import type { StandingGroup } from '../../types/standings';
 import { sortGroupsByUserCountry } from '../../utils/locale';
 import { GroupsCarousel } from './GroupsCarousel';
@@ -18,7 +17,7 @@ interface Props {
   live: MatchSummary[];
   upcoming: MatchSummary[];
   groups?: StandingGroup[];
-  newsItems: NewsItem[];
+  newsItems: NewsArticle[];
   isLoading?: boolean;
   onPressMatch?: (id: number) => void;
   onPressHub?: () => void;
