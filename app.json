@@ -33,8 +33,24 @@
       "expo-router",
       "expo-localization"
     ],
+    "updates": {
+      "url": "https://u.expo.dev/84b79f48-24bd-4cf2-8b10-76885d29363a",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "84b79f48-24bd-4cf2-8b10-76885d29363a"
+      }
+    },
+    "owner": "ruanblima"
   }
 }
