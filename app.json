@@ -31,7 +31,16 @@
     },
     "plugins": [
       "expo-router",
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#00C851",
+          "sounds": [],
+          "enableBackgroundRemoteNotifications": false
+        }
+      ]
     ],
     "updates": {
       "url": "https://u.expo.dev/84b79f48-24bd-4cf2-8b10-76885d29363a",
