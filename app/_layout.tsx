@@ -51,6 +51,7 @@ export default function RootLayout() {
       <StatusBar style="light" />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="match/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="competitions" options={{ headerShown: false }} />
         <Stack.Screen name="competition/[id]" options={{ headerShown: false }} />

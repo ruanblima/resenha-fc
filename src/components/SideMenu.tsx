@@ -13,7 +13,9 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useRouter } from 'expo-router';
 import { BannerAd } from './ads/BannerAd';
+import { signOut, useAuth } from '../hooks/useAuth';
 import { colors } from '../theme';
 import { FEATURED_COMPETITIONS } from '../constants/competitions';
 
@@ -37,6 +39,7 @@ const ACCOUNT_ITEMS = [
 export function SideMenu({ visible, onClose }: Props) {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { user } = useAuth();
   const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -147,14 +150,47 @@ export function SideMenu({ visible, onClose }: Props) {
           {/* ACCOUNT */}
           <SectionLabel label="CONTA" />
           <View className="px-3 gap-y-0.5">
-            {ACCOUNT_ITEMS.map((item) => (
-              <MenuRow
-                key={item.id}
-                icon={item.icon}
-                label={item.name}
-                onPress={closeDrawer}
-              />
-            ))}
+            {user ? (
+              <>
+                <MenuRow
+                  icon="person"
+                  label={user.user_metadata?.full_name ?? 'Meu Perfil'}
+                  onPress={closeDrawer}
+                />
+                <MenuRow
+                  icon="settings"
+                  label="Configurações"
+                  onPress={closeDrawer}
+                />
+                <MenuRow
+                  icon="logout"
+                  label="Sair"
+                  onPress={async () => {
+                    closeDrawer();
+                    await signOut();
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <MenuRow
+                  icon="login"
+                  label="Entrar"
+                  onPress={() => {
+                    closeDrawer();
+                    setTimeout(() => router.push('/(auth)/login'), 300);
+                  }}
+                />
+                <MenuRow
+                  icon="person-add"
+                  label="Criar conta"
+                  onPress={() => {
+                    closeDrawer();
+                    setTimeout(() => router.push('/(auth)/register'), 300);
+                  }}
+                />
+              </>
+            )}
           </View>
 
           {/* Banner no final do menu */}
