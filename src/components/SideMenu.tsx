@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useRouter } from 'expo-router';
 import { BannerAd } from './ads/BannerAd';
 import { signOut, useAuth } from '../hooks/useAuth';
 import { colors } from '../theme';
