@@ -7,7 +7,10 @@ const IS_AVAILABLE =
 // Só faz require se o módulo nativo estiver disponível
 const AdsModule = IS_AVAILABLE ? require('react-native-google-mobile-ads') : null
 
-const PRODUCTION_UNIT_ID = 'ca-app-pub-3363106042195024/9075768606'
+const PRODUCTION_UNIT_ID = Platform.select({
+  android: 'ca-app-pub-3363106042195024/9075768606',
+  ios: 'ca-app-pub-3363106042195024/8596726221',
+})!
 
 export function BannerAd() {
   if (!AdsModule) return null
