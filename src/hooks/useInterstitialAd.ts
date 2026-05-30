@@ -20,7 +20,14 @@ export function useInterstitialAd(triggerEvery = 2) {
     if (matchOpenCount % triggerEvery !== 0) return
 
     // É a Nª abertura — carrega e exibe o anúncio
-    const { InterstitialAd, AdEventType, TestIds } = require('react-native-google-mobile-ads')
+    let adsLib: Record<string, unknown> | null = null
+    try {
+      adsLib = require('react-native-google-mobile-ads')
+    } catch {
+      return
+    }
+    if (!adsLib) return
+    const { InterstitialAd, AdEventType, TestIds } = adsLib as Record<string, unknown>
 
     const AD_UNIT_ID = __DEV__ ? TestIds.INTERSTITIAL : PRODUCTION_UNIT_ID
     const ad = InterstitialAd.createForAdRequest(AD_UNIT_ID, {

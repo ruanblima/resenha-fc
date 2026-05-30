@@ -5,7 +5,14 @@ const IS_AVAILABLE =
   Platform.OS !== 'web' && 'RNGoogleMobileAdsModule' in NativeModules
 
 // Só faz require se o módulo nativo estiver disponível
-const AdsModule = IS_AVAILABLE ? require('react-native-google-mobile-ads') : null
+let AdsModule: Record<string, unknown> | null = null
+try {
+  if (IS_AVAILABLE) {
+    AdsModule = require('react-native-google-mobile-ads')
+  }
+} catch {
+  AdsModule = null
+}
 
 const PRODUCTION_UNIT_ID = Platform.select({
   android: 'ca-app-pub-3363106042195024/9075768606',
