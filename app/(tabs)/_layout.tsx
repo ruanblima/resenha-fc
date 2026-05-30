@@ -1,9 +1,8 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform, View } from 'react-native';
+import { Platform } from 'react-native';
 
-import { BannerAd } from '../../src/components/ads/BannerAd';
 import { colors } from '../../src/theme';
 
 type IconName = React.ComponentProps<typeof MaterialIcons>['name'];
@@ -14,8 +13,7 @@ function TabIcon({ name, color }: { name: IconName; color: string }) {
 
 export default function TabLayout() {
   return (
-    <View style={{ flex: 1 }}>
-      <Tabs
+    <Tabs
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
@@ -69,10 +67,6 @@ export default function TabLayout() {
             href: null,
           }}
         />
-      </Tabs>
-      <View style={{ backgroundColor: colors.surface, alignItems: 'center' }}>
-        <BannerAd />
-      </View>
-    </View>
+    </Tabs>
   );
 }

@@ -6,6 +6,7 @@ import { colors } from '../../theme';
 import type { MatchSummary, NewsArticle } from '../../types/api';
 import type { StandingGroup } from '../../types/standings';
 import { sortGroupsByUserCountry } from '../../utils/locale';
+import { BannerAd } from '../ads/BannerAd';
 import { GroupsCarousel } from './GroupsCarousel';
 import { LiveActionCard } from './LiveActionCard';
 import { NewsCard } from './NewsCard';
@@ -86,8 +87,18 @@ export function HomeScreen({
         </View>
       )}
 
+      {/* ── BANNER AD ────────────────────────────────────── */}
+      <View style={{ alignItems: 'center', marginVertical: 8 }}>
+        <BannerAd />
+      </View>
+
       {/* ── EXPLORAR O HUB ───────────────────────────────── */}
       <ExploreHubCard onPress={onPressHub} />
+
+      {/* ── BANNER AD ────────────────────────────────────── */}
+      <View style={{ alignItems: 'center', marginVertical: 8 }}>
+        <BannerAd />
+      </View>
 
       {/* ── GRUPOS ───────────────────────────────────────── */}
       {groups && groups.length > 0 && (
@@ -99,6 +110,11 @@ export function HomeScreen({
           />
         </View>
       )}
+
+      {/* ── BANNER AD ────────────────────────────────────── */}
+      <View style={{ alignItems: 'center', marginVertical: 8 }}>
+        <BannerAd />
+      </View>
 
       {/* ── NOTÍCIAS ─────────────────────────────────────── */}
       {newsItems.length > 0 && (

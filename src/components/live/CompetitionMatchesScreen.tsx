@@ -9,9 +9,29 @@ import {
   View,
 } from 'react-native';
 
+import { BannerAd } from '../ads/BannerAd';
 import { colors } from '../../theme';
 import type { MatchSummary } from '../../types/api';
 import { COMPETITIONS } from '../../constants/competitions';
+
+function renderWithBannerAds<T>(
+  items: T[],
+  renderItem: (item: T, index: number) => React.ReactNode,
+  interval = 3,
+): React.ReactNode[] {
+  const result: React.ReactNode[] = [];
+  items.forEach((item, index) => {
+    result.push(renderItem(item, index));
+    if ((index + 1) % interval === 0 || index === items.length - 1) {
+      result.push(
+        <View key={`ad-${index}`} style={{ alignItems: 'center', marginVertical: 8 }}>
+          <BannerAd />
+        </View>,
+      );
+    }
+  });
+  return result;
+}
 
 const ALL_ID = 'all';
 
@@ -74,7 +94,7 @@ export function CompetitionMatchesScreen({
         {liveMatches.length > 0 && (
           <View style={{ marginTop: 8 }}>
             <SectionHeader title="AO VIVO" liveCount={liveMatches.length} />
-            {liveMatches.map((match) => (
+            {renderWithBannerAds(liveMatches, (match) => (
               <LiveMatchCard
                 key={match.id}
                 match={match}
@@ -88,7 +108,7 @@ export function CompetitionMatchesScreen({
         {upcomingMatches.length > 0 && (
           <View style={{ marginTop: liveMatches.length > 0 ? 16 : 8 }}>
             <SectionHeader title="PRÓXIMAS PARTIDAS" />
-            {upcomingMatches.map((match) => (
+            {renderWithBannerAds(upcomingMatches, (match) => (
               <UpcomingMatchCard
                 key={match.id}
                 match={match}
@@ -102,7 +122,7 @@ export function CompetitionMatchesScreen({
         {finishedMatches.length > 0 && (
           <View style={{ marginTop: 16 }}>
             <SectionHeader title="ENCERRADAS" />
-            {finishedMatches.map((match) => (
+            {renderWithBannerAds(finishedMatches, (match) => (
               <FinishedMatchCard
                 key={match.id}
                 match={match}

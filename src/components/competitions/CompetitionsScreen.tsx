@@ -2,6 +2,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
+import { BannerAd } from '../ads/BannerAd';
 import { colors } from '../../theme';
 import type { Competition, CountryLeagues } from '../../types/home';
 import { CountryAccordion } from './CountryAccordion';
@@ -63,8 +64,13 @@ export function CompetitionsScreen({
         </ScrollView>
       </View>
 
+      {/* Banner antes de PAÍSES */}
+      <View style={{ alignItems: 'center', marginTop: 24, marginBottom: 8 }}>
+        <BannerAd />
+      </View>
+
       {/* Countries section */}
-      <View style={{ marginTop: 32, paddingHorizontal: 16 }}>
+      <View style={{ marginTop: 8, paddingHorizontal: 16 }}>
         <Text
           style={{
             fontFamily: 'Anybody_700Bold',
@@ -85,6 +91,11 @@ export function CompetitionsScreen({
             />
           ))}
         </View>
+      </View>
+
+      {/* Banner após PAÍSES */}
+      <View style={{ alignItems: 'center', marginTop: 24 }}>
+        <BannerAd />
       </View>
     </ScrollView>
   );

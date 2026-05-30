@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { BannerAd } from './ads/BannerAd';
 import { colors } from '../theme';
 import { FEATURED_COMPETITIONS } from '../constants/competitions';
 
@@ -154,6 +155,11 @@ export function SideMenu({ visible, onClose }: Props) {
                 onPress={closeDrawer}
               />
             ))}
+          </View>
+
+          {/* Banner no final do menu */}
+          <View style={{ alignItems: 'center', marginTop: 24 }}>
+            <BannerAd />
           </View>
         </ScrollView>
       </Animated.View>

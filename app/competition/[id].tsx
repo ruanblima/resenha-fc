@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { BannerAd } from '../../src/components/ads/BannerAd';
 import { BracketScreen } from '../../src/components/competition/BracketScreen';
 import { CompetitionLeagueTable } from '../../src/components/competition/CompetitionLeagueTable';
 import { CompetitionMatchesFeed } from '../../src/components/competition/CompetitionMatchesFeed';
@@ -161,6 +162,11 @@ export default function CompetitionPage() {
             );
           })}
         </View>
+      </View>
+
+      {/* Banner abaixo das abas */}
+      <View style={{ alignItems: 'center', paddingVertical: 8, backgroundColor: colors.background }}>
+        <BannerAd />
       </View>
 
       {/* Content */}
